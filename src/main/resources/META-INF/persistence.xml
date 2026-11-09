@@ -6,7 +6,7 @@
     <persistence-unit name="default">
         <properties>
             <property name="hibernate.connection.url"
-                      value="jdbc:mariadb://localhost:3306/AD_aulavirtual"/>
+                      value="jdbc:mariadb://localhost:3306/AD_gestionsuministros"/>
             <property name="hibernate.connection.driver_class"
                       value="org.mariadb.jdbc.Driver"/>
             <property name="hibernate.connection.password"
@@ -14,7 +14,7 @@
             <property name="hibernate.connection.username"
                       value="root"/>
             <property name="hibernate.show_sql"
-                      value="true"/>
+                      value="false"/>
             <property name="hibernate.dialect"
                       value="org.hibernate.dialect.MariaDBDialect"/>
             <property name="hibernate.hbm2ddl.auto"

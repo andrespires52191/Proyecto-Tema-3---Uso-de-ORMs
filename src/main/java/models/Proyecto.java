@@ -13,7 +13,7 @@ public class Proyecto {
     int id;
 
     @NotNull
-    @Column(unique = true)
+//    @Column(unique = true)
     String codigo;
 
     @NotNull

@@ -13,7 +13,7 @@ public class Pieza {
     int id;
 
     @NotNull
-    @Column(unique = true)
+//    @Column(unique = true)
     String codigo;
 
     @NotNull
