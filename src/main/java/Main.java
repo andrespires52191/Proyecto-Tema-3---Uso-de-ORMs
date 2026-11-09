@@ -1,5 +1,10 @@
+import dao.GestionDao;
+import dao.PiezaDao;
+import dao.ProveedorDao;
+import dao.ProyectoDao;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         //Gestión de proveedores (altas, bajas, modificaciones, búsquedas por código, nombre y dirección).
         //Gestión de piezas (altas, bajas, modificaciones, búsquedas por código y nombre).
         //Gestión de proyectos (altas, bajas, modificaciones, búsquedas por código, nombre y ciudad).
@@ -11,5 +16,12 @@ public class Main {
         //Desde este menú se podrán realizar todas las operaciones sobre la base de datos:
         //gestión de proveedores, gestión de piezas, gestión de proyectos, gestión de suministros y
         //ayuda.
+
+        GestionDao gestionDao = new GestionDao();
+        PiezaDao piezaDao = new PiezaDao();
+        ProveedorDao proveedorDao = new ProveedorDao();
+        ProyectoDao proyectoDao = new ProyectoDao();
+
+
     }
 }
