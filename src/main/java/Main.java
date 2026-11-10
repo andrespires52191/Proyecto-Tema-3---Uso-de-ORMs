@@ -2,12 +2,12 @@ import dao.GestionDao;
 import dao.PiezaDao;
 import dao.ProveedorDao;
 import dao.ProyectoDao;
-import models.Gestion;
-import models.Pieza;
-import models.Proveedor;
-import models.Proyecto;
+import menus.MenuPiezas;
+import menus.MenuProveedores;
+import menus.MenuProyectos;
+import menus.MenuSuministros;
+import utils.EntradaDatos;
 
-import java.time.LocalDate;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -15,18 +15,6 @@ import java.util.logging.Logger;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        //Gestión de proveedores (altas, bajas, modificaciones, búsquedas por código, nombre y dirección).
-        //Gestión de piezas (altas, bajas, modificaciones, búsquedas por código y nombre).
-        //Gestión de proyectos (altas, bajas, modificaciones, búsquedas por código, nombre y ciudad).
-        //Gestión de suministros: altas, bajas, modificaciones y consultas de los suministros,
-        //permitiendo relacionar proveedores, piezas y proyectos e indicar la cantidad suministrada.
-        //En tod momento se deberá respetar la integridad referencial, impidiendo la eliminación de
-        //proveedores, piezas o proyectos que estén asociados a suministros existentes.
-
-        //Desde este menú se podrán realizar todas las operaciones sobre la base de datos:
-        //gestión de proveedores, gestión de piezas, gestión de proyectos, gestión de suministros y
-        //ayuda.
-
         // Ocultar mensajes de hibernate, para que no interfieran con los menus.
         Logger rootLogger = LogManager.getLogManager().getLogger("");
         rootLogger.setLevel(Level.OFF);
@@ -39,23 +27,49 @@ public class Main {
         ProveedorDao proveedorDao = new ProveedorDao();
         ProyectoDao proyectoDao = new ProyectoDao();
 
-        Pieza pieza = new Pieza("PZ001", "Pieza 1", "10.0", "Descripción de la pieza 1");
-        piezaDao.create(pieza);
+        final String MENU = "1) Gestiòn de proveedores\n"
+                + "2) Gestiòn de piezas\n"
+                + "3) Gestiòn de proyectos\n"
+                + "4) Gestiòn de suministros\n"
+                + "5) Ayuda\n"
+                + "6) Salir";
 
-        Proveedor proveedor = new Proveedor("PV001", "Juan", "Pérez", "Calle Falsa 123");
-        proveedorDao.create(proveedor);
+        int accion = -1;
+        while (accion != 6) {
+            try {
+                accion = Integer.parseInt(EntradaDatos.preguntar("Elija una opción:\n" + MENU + "\n\nAcción: "));
+            } catch (NumberFormatException e) {
+                accion = -1;
+            }
 
-        Proyecto proyecto = new Proyecto("PJ001", "Proyecto 1", "Madrid");
-        proyectoDao.create(proyecto);
-
-        Gestion gestion = new Gestion(LocalDate.now(), 5, proveedor, pieza, proyecto);
-        gestionDao.create(gestion);
-
-        try {
-            proveedorDao.delete(proveedor);
-        } catch (Exception e) {
-            System.out.println("No se puede eliminar el proveedor porque está asociado a una gestión.");
+            switch (accion) {
+                case 1:
+                    new MenuProveedores(proveedorDao);
+                    break;
+                case 2:
+                    new MenuPiezas(piezaDao);
+                    break;
+                case 3:
+                    new MenuProyectos(proyectoDao);
+                    break;
+                case 4:
+                    new MenuSuministros(gestionDao, proveedorDao, piezaDao, proyectoDao);
+                    break;
+                case 5:
+                    System.out.println("Ayuda:\n"
+                            + "Gestión de proveedores: altas, bajas, modificaciones, búsquedas por código, nombre y dirección.\n"
+                            + "Gestión de piezas: altas, bajas, modificaciones, búsquedas por código y nombre.\n"
+                            + "Gestión de proyectos: altas, bajas, modificaciones, búsquedas por código, nombre y ciudad.\n"
+                            + "Gestión de suministros: altas, bajas, modificaciones y consultas de los suministros,\n"
+                            + "  permitiendo relacionar proveedores, piezas y proyectos e indicar la cantidad suministrada.\n"
+                            + "  No se podrán eliminar proveedores, piezas o proyectos que estén asociados a suministros existentes.");
+                    break;
+                case 6:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Acción no válida");
+            }
         }
-
     }
 }
