@@ -6,12 +6,13 @@ import menus.MenuPiezas;
 import menus.MenuProveedores;
 import menus.MenuProyectos;
 import menus.MenuSuministros;
-import utils.EntradaDatos;
 
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import static utils.EntradaDatos.preguntar;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -37,7 +38,7 @@ public class Main {
         int accion = -1;
         while (accion != 6) {
             try {
-                accion = Integer.parseInt(EntradaDatos.preguntar("Elija una opción:\n" + MENU + "\n\nAcción: "));
+                accion = Integer.parseInt(preguntar("Elija una opción:\n" + MENU + "\n\nAcción: "));
             } catch (NumberFormatException e) {
                 accion = -1;
             }

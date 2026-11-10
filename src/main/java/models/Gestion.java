@@ -3,6 +3,7 @@ package models;
 import com.sun.istack.NotNull;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 //Proveedores – Gestión (1:N): Un proveedor podrá estar asociado a varias gestiones, pero
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 //Proyectos – Gestión (1:N): Un proyecto podrá tener asociadas varias gestiones, pero cada
 //  gestión pertenecerá a un único proyecto.
 @Entity
-public class Gestion {
+public class Gestion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -48,6 +49,14 @@ public class Gestion {
         this.proveedor = proveedor;
         this.pieza = pieza;
         this.proyecto = proyecto;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getFecha() {
@@ -88,5 +97,17 @@ public class Gestion {
 
     public void setProyecto(Proyecto proyecto) {
         this.proyecto = proyecto;
+    }
+
+    @Override
+    public String toString() {
+        return "Gestion{" +
+                "id=" + id +
+                ", fecha=" + fecha +
+                ", cantidad=" + cantidad +
+                ", proveedor=" + proveedor.getCodigo() +
+                ", pieza=" + pieza.getCodigo() +
+                ", proyecto=" + proyecto.getCodigo() +
+                '}';
     }
 }

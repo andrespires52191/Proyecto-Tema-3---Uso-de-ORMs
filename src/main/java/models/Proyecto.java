@@ -3,10 +3,11 @@ package models;
 import com.sun.istack.NotNull;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class Proyecto {
+public class Proyecto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -56,5 +57,14 @@ public class Proyecto {
 
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
+    }
+
+    @Override
+    public String toString() {
+        return "Proyecto{" +
+                "ciudad='" + ciudad + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", codigo='" + codigo + '\'' +
+                '}';
     }
 }

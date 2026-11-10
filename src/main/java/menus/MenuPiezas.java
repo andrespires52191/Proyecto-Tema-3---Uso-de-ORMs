@@ -1,7 +1,11 @@
 package menus;
 
 import dao.PiezaDao;
-import utils.EntradaDatos;
+import models.Pieza;
+
+import java.util.List;
+
+import static utils.EntradaDatos.preguntar;
 
 public class MenuPiezas {
     private PiezaDao piezaDao;
@@ -22,7 +26,7 @@ public class MenuPiezas {
         int accion = -1;
         while (accion != 7) {
             try {
-                accion = Integer.parseInt(EntradaDatos.preguntar("Elija una opción:\n" + MENU + "\n\nAcción: "));
+                accion = Integer.parseInt(preguntar("Elija una opción:\n" + MENU + "\n\nAcción: "));
             } catch (NumberFormatException e) {
                 accion = -1;
             }
@@ -55,21 +59,102 @@ public class MenuPiezas {
         }
     }
 
+    private Pieza pedirDatosPieza() {
+        //public Pieza(String codigo, String nombre, String precio, String descripcion)
+        String codigo = preguntar("Código de la pieza: ");
+        String nombre = preguntar("Nombre de la pieza: ");
+        String precio = preguntar("Precio de la pieza (€): ");
+        String descripcion = preguntar("Descripción de la pieza: ");
+
+        if (codigo.isEmpty() || nombre.isEmpty() || precio.isEmpty()) {
+            System.out.println("Error: Código, nombre y precio son obligatorios.");
+            return null;
+        }
+
+        Pieza pieza = new Pieza(codigo, nombre, precio, descripcion);
+        return pieza;
+    }
+
     private void alta() {
+        Pieza pieza = pedirDatosPieza();
+        if (pieza == null) {
+            System.out.println("Error al introducir los datos de la pieza.");
+            return;
+        }
+
+        piezaDao.create(pieza);
+        System.out.println("Pieza creada correctamente.");
     }
 
     private void baja() {
+        String codigo = preguntar("Código de la pieza a dar de baja: ");
+        Pieza pieza = piezaDao.findByCodigo(codigo);
+        if (pieza == null) {
+            System.out.println("Pieza no encontrada");
+            return;
+        }
+
+        piezaDao.delete(pieza);
+        System.out.println("Pieza dada de baja correctamente.");
     }
 
     private void modificacion() {
+        String codigo = preguntar("Código de la pieza a modificar: ");
+        Pieza pieza = piezaDao.findByCodigo(codigo);
+        if (pieza == null) {
+            System.out.println("Pieza no encontrada");
+            return;
+        }
+
+        Pieza nuevaPieza = pedirDatosPieza();
+        if (nuevaPieza == null) {
+            System.out.println("Error al modificar la pieza.");
+            return;
+        }
+
+        piezaDao.update(nuevaPieza);
+        System.out.println("Pieza modificada correctamente.");
     }
 
     private void consultaPorCodigo() {
+        String codigo = preguntar("Código de la pieza a consultar: ");
+        Pieza pieza = piezaDao.findByCodigo(codigo);
+        if (pieza == null) {
+            System.out.println("Pieza no encontrada");
+            return;
+        }
+
+        System.out.println("Información de la pieza:");
+        System.out.println("Código: " + pieza.getCodigo());
+        System.out.println("Nombre: " + pieza.getNombre());
+        System.out.println("Precio: " + pieza.getPrecio());
+        System.out.println("Descripción: " + pieza.getDescripcion());
     }
 
     private void consultaPorNombre() {
+        String nombre = preguntar("Nombre de la pieza a consultar: ");
+        List<Pieza> piezas = piezaDao.findByNombre(nombre);
+        if (piezas.isEmpty()) {
+            System.out.println("No se encontraron piezas con ese nombre.");
+            return;
+        }
+
+        System.out.println("Piezas encontradas:");
+        for (Pieza p : piezas) {
+            System.out.println(p);
+        }
     }
 
     private void listadoCompleto() {
+        List<Pieza> piezas = piezaDao.findAll();
+        if (piezas.isEmpty()) {
+            System.out.println("No hay piezas registradas.");
+            return;
+        }
+
+        System.out.println("Listado completo de piezas:");
+        for (Pieza p : piezas) {
+            System.out.println(p);
+        }
     }
 }

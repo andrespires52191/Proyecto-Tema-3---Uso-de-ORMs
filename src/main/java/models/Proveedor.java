@@ -3,10 +3,11 @@ package models;
 import com.sun.istack.NotNull;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class Proveedor {
+public class Proveedor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -68,5 +69,15 @@ public class Proveedor {
 
     public void setDireccionPostal(String direccionPostal) {
         this.direccionPostal = direccionPostal;
+    }
+
+    @Override
+    public String toString() {
+        return "Proveedor{" +
+                "direccionPostal='" + direccionPostal + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", codigo='" + codigo + '\'' +
+                '}';
     }
 }
