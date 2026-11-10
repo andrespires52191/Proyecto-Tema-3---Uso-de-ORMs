@@ -14,14 +14,14 @@ public class Pieza implements Serializable {
     int id;
 
     @NotNull
-//    @Column(unique = true)
+    @Column(unique = true)
     String codigo;
 
     @NotNull
     String nombre;
 
     @NotNull
-    String precio;
+    double precio;
 
     @NotNull
     String descripcion;
@@ -32,7 +32,7 @@ public class Pieza implements Serializable {
     public Pieza() {
     }
 
-    public Pieza(String codigo, String nombre, String precio, String descripcion) {
+    public Pieza(String codigo, String nombre, double precio, String descripcion) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
@@ -55,11 +55,11 @@ public class Pieza implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(String precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
@@ -74,10 +74,10 @@ public class Pieza implements Serializable {
     @Override
     public String toString() {
         return "Pieza{" +
-                "descripcion='" + descripcion + '\'' +
-                ", precio='" + precio + '\'' +
+                "codigo='" + codigo + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", codigo='" + codigo + '\'' +
+                ", precio='" + precio + '\'' +
+                ", descripcion='" + descripcion + '\'' +
                 '}';
     }
 }

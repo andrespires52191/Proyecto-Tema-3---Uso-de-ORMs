@@ -60,6 +60,7 @@ public class MenuProyectos {
                 default:
                     System.out.println("Acción no válida");
             }
+            System.out.println();
         }
     }
 
@@ -80,6 +81,10 @@ public class MenuProyectos {
         Proyecto proyecto = pedirDatosProyecto();
         if (proyecto == null) {
             System.out.println("Error al introducir los datos del proyecto.");
+            return;
+        }
+        if (proyectoDao.findByCodigo(proyecto.getCodigo()) != null) {
+            System.out.println("Error: Ya existe un proyecto con ese código.");
             return;
         }
 
@@ -112,8 +117,15 @@ public class MenuProyectos {
             System.out.println("Error al introducir los datos del proyecto.");
             return;
         }
+        if (proyectoDao.findByCodigo(nuevoProyecto.getCodigo()) != null) {
+            System.out.println("Error: Ya existe un proyecto con ese código.");
+            return;
+        }
+        proyecto.setCodigo(nuevoProyecto.getCodigo());
+        proyecto.setNombre(nuevoProyecto.getNombre());
+        proyecto.setCiudad(nuevoProyecto.getCiudad());
 
-        proyectoDao.update(nuevoProyecto);
+        proyectoDao.update(proyecto);
         System.out.println("Proyecto modificado correctamente.");
     }
 

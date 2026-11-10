@@ -14,7 +14,7 @@ public class Proyecto implements Serializable {
     int id;
 
     @NotNull
-//    @Column(unique = true)
+    @Column(unique = true)
     String codigo;
 
     @NotNull
@@ -62,9 +62,9 @@ public class Proyecto implements Serializable {
     @Override
     public String toString() {
         return "Proyecto{" +
-                "ciudad='" + ciudad + '\'' +
+                "codigo='" + codigo + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", codigo='" + codigo + '\'' +
+                ", ciudad='" + ciudad + '\'' +
                 '}';
     }
 }

@@ -23,14 +23,25 @@ public class Main {
             handler.setLevel(Level.OFF);
         }
 
-        GestionDao gestionDao = new GestionDao();
-        PiezaDao piezaDao = new PiezaDao();
-        ProveedorDao proveedorDao = new ProveedorDao();
-        ProyectoDao proyectoDao = new ProyectoDao();
+        GestionDao gestionDao;
+        PiezaDao piezaDao;
+        ProveedorDao proveedorDao;
+        ProyectoDao proyectoDao;
+        try {
+            gestionDao = new GestionDao();
+            piezaDao = new PiezaDao();
+            proveedorDao = new ProveedorDao();
+            proyectoDao = new ProyectoDao();
+        } catch (Exception e) {
+            System.out.println("La base de datos no está disponible.");
+            System.out.println("Compruebe el problema y reinicie la aplicación.");
+            //e.printStackTrace();
+            return;
+        }
 
-        final String MENU = "1) Gestiòn de proveedores\n"
-                + "2) Gestiòn de piezas\n"
-                + "3) Gestiòn de proyectos\n"
+        final String MENU = "1) Gestiòn de piezas\n"
+                + "2) Gestiòn de proyectos\n"
+                + "3) Gestiòn de proveedores\n"
                 + "4) Gestiòn de suministros\n"
                 + "5) Ayuda\n"
                 + "6) Salir";
@@ -45,13 +56,13 @@ public class Main {
 
             switch (accion) {
                 case 1:
-                    new MenuProveedores(proveedorDao);
-                    break;
-                case 2:
                     new MenuPiezas(piezaDao);
                     break;
-                case 3:
+                case 2:
                     new MenuProyectos(proyectoDao);
+                    break;
+                case 3:
+                    new MenuProveedores(proveedorDao);
                     break;
                 case 4:
                     new MenuSuministros(gestionDao, proveedorDao, piezaDao, proyectoDao);
@@ -62,8 +73,8 @@ public class Main {
                             + "Gestión de piezas: altas, bajas, modificaciones, búsquedas por código y nombre.\n"
                             + "Gestión de proyectos: altas, bajas, modificaciones, búsquedas por código, nombre y ciudad.\n"
                             + "Gestión de suministros: altas, bajas, modificaciones y consultas de los suministros,\n"
-                            + "  permitiendo relacionar proveedores, piezas y proyectos e indicar la cantidad suministrada.\n"
-                            + "  No se podrán eliminar proveedores, piezas o proyectos que estén asociados a suministros existentes.");
+                            + "    permitiendo relacionar proveedores, piezas y proyectos e indicar la cantidad suministrada.\n"
+                            + "    No se podrán eliminar proveedores, piezas o proyectos que estén asociados a suministros existentes.");
                     break;
                 case 6:
                     System.out.println("Saliendo...");
@@ -71,6 +82,7 @@ public class Main {
                 default:
                     System.out.println("Acción no válida");
             }
+            System.out.println();
         }
     }
 }

@@ -5,6 +5,9 @@ import dao.PiezaDao;
 import dao.ProveedorDao;
 import dao.ProyectoDao;
 import models.Gestion;
+import models.Pieza;
+import models.Proveedor;
+import models.Proyecto;
 
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class MenuSuministros {
         final String MENU = "1) Alta de suministro\n"
                 + "2) Baja de suministro\n"
                 + "3) Modificación de suministro\n"
-                + "4) Consulta de suministro por código\n"
+                + "4) Consulta de suministro por id\n"
                 + "5) Listado completo de suministros\n"
                 + "6) Volver al menú principal";
 
@@ -53,31 +56,49 @@ public class MenuSuministros {
                     modificacion();
                     break;
                 case 4:
-                    consultaPorCodigo();
+                    consultaPorId();
                     break;
                 case 5:
-                    consultaPorNombre();
-                    break;
-                case 6:
                     listadoCompleto();
                     break;
-                case 7:
+                case 6:
                     // Volver al menú principal
                     break;
                 default:
                     System.out.println("Acción no válida");
             }
+            System.out.println();
         }
     }
 
     private Gestion pedirDatosSuministro() {
         //Gestion(LocalDate fecha, int cantidad, Proveedor proveedor, Pieza pieza, Proyecto proyecto)
-        String fecha = preguntar("Fecha del suministro (YYYY-MM-DD): ");
-        int cantidad = Integer.parseInt(preguntar("Cantidad suministrada: "));
-        String codigoProveedor = preguntar("Código del proveedor: ");
         String codigoPieza = preguntar("Código de la pieza: ");
+        Pieza pieza = piezaDao.findByCodigo(codigoPieza);
+        if (pieza == null) {
+            System.out.println("Error: No existe una pieza con ese código.");
+            return null;
+        }
+
         String codigoProyecto = preguntar("Código del proyecto: ");
-        return null;
+        Proyecto proyecto = proyectoDao.findByCodigo(codigoProyecto);
+        if (proyecto == null) {
+            System.out.println("Error: No existe un proyecto con ese código.");
+            return null;
+        }
+
+        String codigoProveedor = preguntar("Código del proveedor: ");
+        Proveedor proveedor = proveedorDao.findByCodigo(codigoProveedor);
+        if (proveedor == null) {
+            System.out.println("Error: No existe un proveedor con ese código.");
+            return null;
+        }
+
+        int cantidad = Integer.parseInt(preguntar("Cantidad suministrada: "));
+        String fecha = preguntar("Fecha del suministro (YYYY-MM-DD): ");
+
+        Gestion gestion = new Gestion(fecha, cantidad, proveedor, pieza, proyecto);
+        return gestion;
     }
 
     private void alta() {
@@ -86,14 +107,25 @@ public class MenuSuministros {
             System.out.println("Error al introducir los datos del suministro.");
             return;
         }
+        if (gestionDao.findById(suministro.getId()) != null) {
+            System.out.println("Error: Ya existe una suministro con ese código.");
+            return;
+        }
 
         System.out.println("Suministro creado correctamente.");
         gestionDao.create(suministro);
     }
 
     private void baja() {
-        String codigo = preguntar("Código del suministro a dar de baja: ");
-        Gestion suministro = gestionDao.findByCodigo(codigo);
+        int id;
+        try {
+            id = Integer.parseInt(preguntar("Id del suministro a dar de baja: "));
+        } catch (NumberFormatException e) {
+            System.out.println("Error: El ID debe ser un número entero.");
+            return;
+        }
+
+        Gestion suministro = gestionDao.findById(id);
         if (suministro == null) {
             System.out.println("Suministro no encontrado");
             return;
@@ -104,8 +136,15 @@ public class MenuSuministros {
     }
 
     private void modificacion() {
-        String codigo = preguntar("Código del suministro a modificar: ");
-        Gestion suministro = gestionDao.findByCodigo(codigo);
+        int id;
+        try {
+            id = Integer.parseInt(preguntar("Id del suministro a modificar: "));
+        } catch (NumberFormatException e) {
+            System.out.println("Error: El ID debe ser un número entero.");
+            return;
+        }
+
+        Gestion suministro = gestionDao.findById(id);
         if (suministro == null) {
             System.out.println("Suministro no encontrado");
             return;
@@ -116,14 +155,30 @@ public class MenuSuministros {
             System.out.println("Error al introducir los datos del suministro.");
             return;
         }
+        if (gestionDao.findById(nuevoSuministro.getId()) != null) {
+            System.out.println("Error: Ya existe un suministro con ese código.");
+            return;
+        }
+        suministro.setPieza(nuevoSuministro.getPieza());
+        suministro.setProyecto(nuevoSuministro.getProyecto());
+        suministro.setProveedor(nuevoSuministro.getProveedor());
+        suministro.setCantidad(nuevoSuministro.getCantidad());
+        suministro.setFecha(nuevoSuministro.getFecha());
 
-        gestionDao.update(nuevoSuministro);
+        gestionDao.update(suministro);
         System.out.println("Suministro modificado correctamente.");
     }
 
-    private void consultaPorCodigo() {
-        String codigo = preguntar("Código del suministro a consultar: ");
-        Gestion suministro = gestionDao.findByCodigo(codigo);
+    private void consultaPorId() {
+        int id;
+        try {
+            id = Integer.parseInt(preguntar("Id del suministro a consultar: "));
+        } catch (NumberFormatException e) {
+            System.out.println("Error: El ID debe ser un número entero.");
+            return;
+        }
+
+        Gestion suministro = gestionDao.findById(id);
         if (suministro == null) {
             System.out.println("Suministro no encontrado");
             return;
@@ -136,20 +191,6 @@ public class MenuSuministros {
         System.out.println("Proveedor: " + suministro.getProveedor().getNombre());
         System.out.println("Pieza: " + suministro.getPieza().getNombre());
         System.out.println("Proyecto: " + suministro.getProyecto().getNombre());
-    }
-
-    private void consultaPorNombre() {
-        String nombre = preguntar("Nombre del suministro a consultar: ");
-        List<Gestion> suministros = gestionDao.findByNombre(nombre);
-        if (suministros.isEmpty()) {
-            System.out.println("No se encontraron suministros con ese nombre.");
-            return;
-        }
-
-        System.out.println("Información de los suministros:");
-        for (Gestion suministro : suministros) {
-            System.out.println(suministro);
-        }
     }
 
     private void listadoCompleto() {

@@ -2,6 +2,7 @@ package menus;
 
 import dao.PiezaDao;
 import models.Pieza;
+import utils.EntradaDatos;
 
 import java.util.List;
 
@@ -56,20 +57,33 @@ public class MenuPiezas {
                 default:
                     System.out.println("Acción no válida");
             }
+            System.out.println();
         }
     }
 
     private Pieza pedirDatosPieza() {
         //public Pieza(String codigo, String nombre, String precio, String descripcion)
         String codigo = preguntar("Código de la pieza: ");
-        String nombre = preguntar("Nombre de la pieza: ");
-        String precio = preguntar("Precio de la pieza (€): ");
-        String descripcion = preguntar("Descripción de la pieza: ");
-
-        if (codigo.isEmpty() || nombre.isEmpty() || precio.isEmpty()) {
-            System.out.println("Error: Código, nombre y precio son obligatorios.");
+        if (codigo.isEmpty()) {
+            System.out.println("Error: El código es obligatorio.");
             return null;
         }
+
+        String nombre = preguntar("Nombre de la pieza: ");
+        if (nombre.isEmpty()) {
+            System.out.println("Error: El nombre es obligatorio.");
+            return null;
+        }
+
+        double precio;
+        try {
+            precio = Double.parseDouble(EntradaDatos.preguntar("Precio de la pieza (€): "));
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Precio debe ser un número válido.");
+            return null;
+        }
+
+        String descripcion = preguntar("Descripción de la pieza: ");
 
         Pieza pieza = new Pieza(codigo, nombre, precio, descripcion);
         return pieza;
@@ -79,6 +93,10 @@ public class MenuPiezas {
         Pieza pieza = pedirDatosPieza();
         if (pieza == null) {
             System.out.println("Error al introducir los datos de la pieza.");
+            return;
+        }
+        if (piezaDao.findByCodigo(pieza.getCodigo()) != null) {
+            System.out.println("Error: Ya existe una pieza con ese código.");
             return;
         }
 
@@ -111,8 +129,16 @@ public class MenuPiezas {
             System.out.println("Error al modificar la pieza.");
             return;
         }
+        if (piezaDao.findByCodigo(nuevaPieza.getCodigo()) != null) {
+            System.out.println("Error: Ya existe una pieza con ese código.");
+            return;
+        }
+        pieza.setCodigo(nuevaPieza.getCodigo());
+        pieza.setNombre(nuevaPieza.getNombre());
+        pieza.setPrecio(nuevaPieza.getPrecio());
+        pieza.setDescripcion(nuevaPieza.getDescripcion());
 
-        piezaDao.update(nuevaPieza);
+        piezaDao.update(pieza);
         System.out.println("Pieza modificada correctamente.");
     }
 

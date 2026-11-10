@@ -14,7 +14,7 @@ public class Proveedor implements Serializable {
     int id;
 
     @NotNull
-//    @Column(unique = true)
+    @Column(unique = true)
     String codigo;
 
     @NotNull
@@ -74,10 +74,10 @@ public class Proveedor implements Serializable {
     @Override
     public String toString() {
         return "Proveedor{" +
-                "direccionPostal='" + direccionPostal + '\'' +
-                ", apellidos='" + apellidos + '\'' +
+                "codigo='" + codigo + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", codigo='" + codigo + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", direccionPostal='" + direccionPostal + '\'' +
                 '}';
     }
 }

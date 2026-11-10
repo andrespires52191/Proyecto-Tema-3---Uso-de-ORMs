@@ -60,6 +60,7 @@ public class MenuProveedores {
                 default:
                     System.out.println("Acción no válida");
             }
+            System.out.println();
         }
     }
 
@@ -83,6 +84,10 @@ public class MenuProveedores {
         Proveedor proveedor = pedirDatosProveedor();
         if (proveedor == null) {
             System.out.println("Error al introducir los datos del proveedor.");
+            return;
+        }
+        if (proveedorDao.findByCodigo(proveedor.getCodigo()) != null) {
+            System.out.println("Error: Ya existe una proveedor con ese código.");
             return;
         }
 
@@ -115,8 +120,17 @@ public class MenuProveedores {
             System.out.println("Error al modificar el proveedor.");
             return;
         }
+        Proveedor proveedorExistente = proveedorDao.findByCodigo(nuevoProveedor.getCodigo());
+        if (proveedorExistente != null) {
+            System.out.println("Error: Ya existe una proveedor con ese código.");
+            return;
+        }
+        proveedor.setCodigo(nuevoProveedor.getCodigo());
+        proveedor.setNombre(nuevoProveedor.getNombre());
+        proveedor.setApellidos(nuevoProveedor.getApellidos());
+        proveedor.setDireccionPostal(nuevoProveedor.getDireccionPostal());
 
-        proveedorDao.update(nuevoProveedor);
+        proveedorDao.update(proveedor);
         System.out.println("Proveedor modificado correctamente.");
     }
 

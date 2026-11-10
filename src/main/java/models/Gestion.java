@@ -103,11 +103,11 @@ public class Gestion implements Serializable {
     public String toString() {
         return "Gestion{" +
                 "id=" + id +
-                ", fecha=" + fecha +
-                ", cantidad=" + cantidad +
-                ", proveedor=" + proveedor.getCodigo() +
                 ", pieza=" + pieza.getCodigo() +
                 ", proyecto=" + proyecto.getCodigo() +
+                ", proveedor=" + proveedor.getCodigo() +
+                ", cantidad=" + cantidad +
+                ", fecha=" + fecha +
                 '}';
     }
 }
